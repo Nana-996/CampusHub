@@ -4,18 +4,18 @@ A fully-featured mobile campus application designed for Ghanaian university stud
 
 ## Features
 
-### 📱 Responsive Design
+### Responsive Design
 - Phone frame mockup (390x844px)
 - Dark mode theme
 - Smooth transitions and animations
 - Mobile-first approach
 
-### 🔐 Authentication
+### Authentication
 - Login/Signup with email and password
 - School selection (6 Ghanaian universities)
 - localStorage persistence (stays logged in)
 
-### 🏠 Home Tab
+### Home Tab
 - Story carousel with avatars
 - Feed with Official/Scholar/Peer badges
 - Create posts with category selector
@@ -23,14 +23,14 @@ A fully-featured mobile campus application designed for Ghanaian university stud
 - Real-time search and filtering
 - Notifications dropdown
 
-### 🛒 Market Tab
+### Market Tab
 - Product listing with images
 - Category filtering (Textbooks, Electronics, Clothing, Services)
 - List new items with pricing
 - Real-time search
 - Responsive grid layout
 
-### 🍽️ Food Tab
+### Food Tab
 - Vendor listings with ratings and status
 - Vendor menus with pricing
 - Add to cart functionality
@@ -38,21 +38,21 @@ A fully-featured mobile campus application designed for Ghanaian university stud
 - Order placement with success confirmation
 - Delivery time estimates
 
-### 🤖 Tribe AI Tab
+### Tribe AI Tab
 - Study modes: Study Help, Drug Info, Summarize, Biochem, Dosage Calc
 - Suggested prompt chips
 - Persistent chat history
 - AI typing indicator
 - Contextual responses for pharmacy/health sciences
 
-### 🚀 Opportunities Tab
+### Opportunities Tab
 - Scholarships, Internships, Jobs, Events
 - Color-coded org logos by name
 - Bookmark/save functionality
 - Detailed modals with apply links
 - Deadline highlighting
 
-### 👤 Profile Tab
+### Profile Tab
 - User avatar and school info
 - Stats: Listings, Saved Opps, Posts
 - Edit profile functionality
