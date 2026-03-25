@@ -1,0 +1,27 @@
+{
+    "name": "campus-hub",
+    "version": "1.0.0",
+    "description": "Mobile campus app for Ghanaian university students",
+    "main": "index.html",
+    "scripts": {
+        "start": "http-server",
+        "dev": "http-server -p 8080 -c-1",
+        "build": "echo 'Build process would minify and bundle assets'",
+        "test": "jest"
+    },
+    "keywords": [
+        "campus",
+        "mobile",
+        "ghana",
+        "education",
+        "students"
+    ],
+    "author": "Campus Hub Team",
+    "license": "MIT",
+    "devDependencies": {
+        "http-server": "^14.1.1",
+        "jest": "^29.5.0",
+        "prettier": "^3.0.0",
+        "eslint": "^8.45.0"
+    }
+}

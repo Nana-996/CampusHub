@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Hub - Ghana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0F0F1A;
+            --card: #1A1A2E;
+            --primary: #6C3FC5;
+            --accent: #FF6B35;
+            --text: #E0E0E0;
+            --text-dim: #999;
+            --border: #2A2A3E;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .phone-frame {
+            width: 100%;
+            height: 100vh;
+            background: var(--card);
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .status-bar {
+            display: none;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            height: 60px;
+            background: var(--card);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .top-bar-left {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--border);
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 16px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .bottom-nav {
+            height: 70px;
+            background: var(--card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* HOME TAB */
+        .story-row {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            scroll-behavior: smooth;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .story-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .story-label {
+            font-size: 10px;
+            text-align: center;
+            width: 70px;
+        }
+
+        .feed-card {
+            background: var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: transform 0.2s;
+        }
+
+        .feed-card:active {
+            transform: scale(0.98);
+        }
+
+        .card-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .card-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .card-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-meta {
+            flex: 1;
+        }
+
+        .card-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .card-time {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: 600;
+        }
+
+        .badge-official {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .badge-scholar {
+            background: #FFB800;
+            color: #000;
+        }
+
+        .badge-peer {
+            background: var(--text-dim);
+            color: #000;
+        }
+
+        .card-body {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+        }
+
+        .action-btn.liked {
+            color: #FF4757;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(108, 63, 197, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: transform 0.2s;
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        .fab.show {
+            display: flex;
+        }
+
+        /* MODALS */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: flex-end;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            width: 100%;
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* MARKET TAB */
+        .search-bar {
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .category-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            scroll-behavior: smooth;
+        }
+
+        .chip {
+            background: var(--border);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .chip.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .product-card {
+            background: var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 120px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 8px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .product-seller {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        /* FOOD TAB */
+        .vendor-card {
+            background: var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .vendor-img {
+            width: 100%;
+            height: 140px;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .vendor-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .vendor-info {
+            padding: 12px;
+        }
+
+        .vendor-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .vendor-cuisine {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .vendor-rating {
+            color: #FFB800;
+            font-size: 12px;
+        }
+
+        .vendor-status {
+            display: inline-block;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-top: 6px;
+        }
+
+        .status-open {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .status-closed {
+            background: var(--text-dim);
+            color: #000;
+        }
+
+        .menu-item {
+            background: var(--border);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-item-info {
+            flex: 1;
+        }
+
+        .menu-item-name {
+            font-weight: 500;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .menu-item-price {
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .add-to-cart-btn {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .add-to-cart-btn:hover {
+            opacity: 0.8;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--accent);
+            color: #fff;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .cart-items-list {
+            background: var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 12px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .cart-item-price {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .quantity-control {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .qty-btn {
+            background: var(--bg);
+            border: none;
+            color: var(--text);
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .cart-total {
+            background: var(--border);
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        /* TRIBE AI TAB */
+        .mode-chips {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            scroll-behavior: smooth;
+        }
+
+        .prompt-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .prompt-chip {
+            background: var(--border);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prompt-chip:active {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-bubble {
+            margin-bottom: 12px;
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-bubble.user {
+            justify-content: flex-end;
+        }
+
+        .chat-bubble.ai {
+            justify-content: flex-start;
+        }
+
+        .bubble-content {
+            background: var(--border);
+            padding: 10px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.user .bubble-content {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            animation: typingAnimation 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingAnimation {
+
+            0%,
+            60%,
+            100% {
+                opacity: 0.3;
+            }
+
+            30% {
+                opacity: 1;
+            }
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 10px 14px;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+
+        .send-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* OPPS TAB */
+        .sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .sub-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 8px 12px;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .sub-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .opp-card {
+            background: var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .opp-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .color-a {
+            background: var(--primary);
+        }
+
+        .color-g {
+            background: var(--accent);
+        }
+
+        .color-m {
+            background: #16a34a;
+        }
+
+        .color-s {
+            background: #2563eb;
+        }
+
+        .opp-details {
+            flex: 1;
+        }
+
+        .opp-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .opp-org {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .opp-deadline {
+            font-size: 11px;
+            color: #FF4757;
+            font-weight: 600;
+        }
+
+        .bookmark-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .bookmark-btn.saved {
+            color: var(--accent);
+        }
+
+        /* PROFILE TAB */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .profile-school {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 2px;
+        }
+
+        .profile-dept {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: var(--border);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        .profile-btn {
+            background: var(--border);
+            border: none;
+            color: var(--text);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            width: 100%;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            transition: background 0.2s;
+        }
+
+        .profile-btn:hover {
+            background: var(--border);
+            opacity: 0.8;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .primary-btn:hover {
+            opacity: 0.8;
+        }
+
+        .accent-btn {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* AUTH SCREEN */
+        .auth-container {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            height: 100%;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .auth-container.active {
+            display: flex;
+        }
+
+        .auth-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            background: var(--border);
+            padding: 4px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            margin-bottom: 4px;
+            color: var(--text-dim);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .error-msg {
+            color: #FF4757;
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* DROPDOWN */
+        .dropdown-panel {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            margin-top: 8px;
+        }
+
+        .dropdown-panel.active {
+            display: block;
+        }
+
+        .notification-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .notification-time {
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        /* UTILITY */
+        .hidden {
+            display: none;
+        }
+
+        input::placeholder {
+            color: var(--text-dim);
+        }
+
+        select {
+            color: var(--text);
+        }
+
+        select option {
+            background: var(--card);
+            color: var(--text);
+        }
+
+        /* SCROLLBAR */
+        .content-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content-area::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone-frame">
+        <!-- AUTH SCREEN -->
+        <div class="auth-container active" id="authScreen">
+            <div class="auth-title">Campus Hub</div>
+
+            <div class="auth-toggle">
+                <button class="toggle-btn active" data-mode="login">Login</button>
+                <button class="toggle-btn" data-mode="signup">Sign Up</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-input" id="authName" placeholder="Your name" style="display: none;">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="authEmail" placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" id="authPassword" placeholder="••••••••">
+            </div>
+
+            <div class="form-group" id="schoolGroup" style="display: none;">
+                <label class="form-label">School</label>
+                <select class="form-select" id="authSchool">
+                    <option value="">Select your school</option>
+                    <option value="Central University">Central University</option>
+                    <option value="KNUST">KNUST</option>
+                    <option value="University of Ghana">University of Ghana</option>
+                    <option value="UCC">UCC</option>
+                    <option value="UPSA">UPSA</option>
+                    <option value="Ashesi">Ashesi</option>
+                </select>
+            </div>
+
+            <div id="authError" class="error-msg"></div>
+
+            <button class="primary-btn" id="authSubmit">Login</button>
+        </div>
+
+        <!-- MAIN APP -->
+        <div class="app-container" id="appContainer" style="display: none;">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="top-bar-left" id="topBarSchool">KNUST</div>
+                <div class="top-bar-right">
+                    <button class="icon-btn" id="searchBtn">🔍</button>
+                    <div style="position: relative;">
+                        <button class="icon-btn cart-icon" id="notificationBtn">🔔</button>
+                        <div class="dropdown-panel" id="notificationPanel"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTENT AREA -->
+            <div class="content-area">
+                <!-- HOME TAB -->
+                <div class="tab-content active" id="homeTab">
+                    <input type="text" class="search-bar hidden" id="searchInput" placeholder="Search feed...">
+
+                    <div class="story-row" id="storyRow"></div>
+
+                    <div id="feedContainer"></div>
+                </div>
+
+                <!-- MARKET TAB -->
+                <div class="tab-content" id="marketTab">
+                    <input type="text" class="search-bar" id="marketSearch" placeholder="Search products...">
+
+                    <div class="category-chips" id="categoryChips"></div>
+
+                    <div class="product-grid" id="productGrid"></div>
+
+                    <button class="primary-btn" style="margin-top: 16px;" data-modal="listItem">List Item</button>
+                </div>
+
+                <!-- FOOD TAB -->
+                <div class="tab-content" id="foodTab">
+                    <div id="vendorsList"></div>
+                </div>
+
+                <!-- TRIBE AI TAB -->
+                <div class="tab-content" id="tribeTab">
+                    <div class="mode-chips" id="modeChips"></div>
+                    <div class="prompt-chips" id="promptChips"></div>
+                    <div class="chat-container" id="chatContainer"></div>
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="tribeInput" placeholder="Ask something...">
+                        <button class="send-btn" id="tribeSend">→</button>
+                    </div>
+                </div>
+
+                <!-- OPPS TAB -->
+                <div class="tab-content" id="oppsTab">
+                    <div class="sub-tabs" id="oppSubTabs"></div>
+                    <div id="oppCardsContainer"></div>
+                </div>
+
+                <!-- PROFILE TAB -->
+                <div class="tab-content" id="profileTab">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img id="profileAvatar" src="" alt="avatar" onerror="this.style.display='none'">
+                        </div>
+                        <div class="profile-name" id="profileName"></div>
+                        <div class="profile-school" id="profileSchool"></div>
+                        <div class="profile-dept">Pharmacy</div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-number" id="statListings">0</div>
+                            <div class="stat-label">Listings</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statSaved">0</div>
+                            <div class="stat-label">Saved Opps</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statPosts">0</div>
+                            <div class="stat-label">Posts</div>
+                        </div>
+                    </div>
+
+                    <button class="profile-btn">📝 My Listings</button>
+                    <button class="profile-btn">💾 Saved Opportunities</button>
+                    <button class="profile-btn" id="anonToggle">👤 Anonymous Mode: OFF</button>
+                    <button class="profile-btn" id="editProfile">✏️ Edit Profile</button>
+                    <button class="profile-btn accent-btn" id="logout">🚪 Log Out</button>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAV -->
+            <div class="bottom-nav">
+                <button class="nav-btn active" data-tab="home">
+                    <div class="nav-icon">🏠</div>
+                    <div>Home</div>
+                </button>
+                <button class="nav-btn" data-tab="market">
+                    <div class="nav-icon">🛒</div>
+                    <div>Market</div>
+                </button>
+                <button class="nav-btn" data-tab="food">
+                    <div class="nav-icon">🍽️</div>
+                    <div>Food</div>
+                </button>
+                <button class="nav-btn" data-tab="tribe">
+                    <div class="nav-icon">🤖</div>
+                    <div>Tribe AI</div>
+                </button>
+                <button class="nav-btn" data-tab="opps">
+                    <div class="nav-icon">🚀</div>
+                    <div>Opps</div>
+                </button>
+                <button class="nav-btn" data-tab="profile">
+                    <div class="nav-icon">👤</div>
+                    <div>Profile</div>
+                </button>
+            </div>
+
+            <!-- FAB -->
+            <button class="fab" id="fab">+</button>
+        </div>
+
+        <!-- MODALS -->
+        <!-- CREATE POST MODAL -->
+        <div class="modal" id="createPostModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Create Post</div>
+                    <button class="close-btn" onclick="closeModal('createPostModal')">✕</button>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-input" id="postText" placeholder="What's on your mind?"
+                        style="min-height: 100px; resize: none; font-family: 'Poppins', sans-serif;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="postCategory">
+                        <option value="official">Official</option>
+                        <option value="scholar">Scholar</option>
+                        <option value="peer">Peer</option>
+                    </select>
+                </div>
+                <button class="primary-btn" id="postSubmit">Post</button>
+            </div>
+        </div>
+
+        <!-- LIST ITEM MODAL -->
+        <div class="modal" id="listItemModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">List Item</div>
+                    <button class="close-btn" onclick="closeModal('listItemModal')">✕</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Item Name</label>
+                    <input type="text" class="form-input" id="itemName" placeholder="e.g., Biology Textbook">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price (GHS)</label>
+                    <input type="number" class="form-input" id="itemPrice" placeholder="100">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="itemCategory">
+                        <option value="Textbooks">Textbooks</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Services">Services</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Image Seed (for photos)</label>
+                    <input type="text" class="form-input" id="itemSeed" placeholder="e.g., biology">
+                </div>
+                <button class="primary-btn" id="itemSubmit">List Item</button>
+            </div>
+        </div>
+
+        <!-- VENDOR MENU MODAL -->
+        <div class="modal" id="vendorMenuModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="vendorMenuTitle">Vendor Menu</div>
+                    <button class="close-btn" onclick="closeModal('vendorMenuModal')">✕</button>
+                </div>
+                <div id="menuItemsContainer"></div>
+            </div>
+        </div>
+
+        <!-- CART MODAL -->
+        <div class="modal" id="cartModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Your Cart</div>
+                    <button class="close-btn" onclick="closeModal('cartModal')">✕</button>
+                </div>
+                <div class="cart-items-list" id="cartItemsList"></div>
+                <div class="cart-total">
+                    <div>Total:</div>
+                    <div id="cartTotal">GHS 0</div>
+                </div>
+                <button class="primary-btn" id="placeOrderBtn">Place Order</button>
+            </div>
+        </div>
+
+        <!-- OPP DETAIL MODAL -->
+        <div class="modal" id="oppDetailModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title" id="oppDetailTitle"></div>
+                    <button class="close-btn" onclick="closeModal('oppDetailModal')">✕</button>
+                </div>
+                <div id="oppDetailBody"></div>
+            </div>
+        </div>
+
+        <!-- EDIT PROFILE MODAL -->
+        <div class="modal" id="editProfileModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title">Edit Profile</div>
+                    <button class="close-btn" onclick="closeModal('editProfileModal')">✕</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" id="editName">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">School</label>
+                    <select class="form-select" id="editSchool">
+                        <option value="Central University">Central University</option>
+                        <option value="KNUST">KNUST</option>
+                        <option value="University of Ghana">University of Ghana</option>
+                        <option value="UCC">UCC</option>
+                        <option value="UPSA">UPSA</option>
+                        <option value="Ashesi">Ashesi</option>
+                    </select>
+                </div>
+                <button class="primary-btn" id="saveProfileBtn">Save Changes</button>
+            </div>
+        </div>
+
+        <!-- ORDER SUCCESS MODAL -->
+        <div class="modal" id="orderSuccessModal">
+            <div class="modal-content" style="text-align: center;">
+                <div class="modal-header" style="justify-content: center;">
+                    <div class="modal-title">✓ Order Placed!</div>
+                </div>
+                <div style="font-size: 48px; margin-bottom: 12px;">🎉</div>
+                <div style="margin-bottom: 4px;">Order #<span id="orderNumber">0</span></div>
+                <div style="color: var(--text-dim); font-size: 12px; margin-bottom: 16px;">Delivery in 20-30 minutes
+                </div>
+                <button class="primary-btn" onclick="closeModal('orderSuccessModal')">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ STATE MANAGEMENT ============
+        const state = {
+            user: null,
+            isAnonymous: false,
+            cart: [],
+            posts: [],
+            products: [],
+            vendors: [],
+            opportunities: [],
+            notifications: [],
+            chatHistory: [],
+            currentMode: 'Study Help',
+            savedOpps: [],
+        };
+
+        // ============ INITIALIZATION ============
+        function init() {
+            const stored = localStorage.getItem('campusHubUser');
+            if (stored) {
+                state.user = JSON.parse(stored);
+                showApp();
+            } else {
+                showAuth();
+            }
+            initializeData();
+            setupEventListeners();
+        }
+
+        function initializeData() {
+            // Posts
+            state.posts = [
+                {
+                    id: 1,
+                    name: 'Ama Owusu',
+                    avatar: 'ama',
+                    type: 'official',
+                    time: '2 hours ago',
+                    text: 'Pharmacy practical exam rescheduled to next Monday. Check your email for details!',
+                    likes: 24,
+                    liked: false,
+                    comments: 8,
+                },
+                {
+                    id: 2,
+                    name: 'Kofi Mensah',
+                    avatar: 'kofi',
+                    type: 'peer',
+                    time: '4 hours ago',
+                    text: 'Does anyone have the Organic Chemistry notes from Prof. Boateng? Lost mine during the system crash 😅',
+                    likes: 12,
+                    liked: false,
+                    comments: 5,
+                },
+                {
+                    id: 3,
+                    name: 'Dr. Frimpong',
+                    avatar: 'frimpong',
+                    type: 'official',
+                    time: '6 hours ago',
+                    text: 'Congratulations to our students who won the National Health Quiz Competition!',
+                    likes: 89,
+                    liked: false,
+                    comments: 34,
+                },
+                {
+                    id: 4,
+                    name: 'Abena Appiah',
+                    avatar: 'abena',
+                    type: 'scholar',
+                    time: '8 hours ago',
+                    text: 'GETFund scholarship disbursement now live. Check your student portal!',
+                    likes: 156,
+                    liked: false,
+                    comments: 42,
+                },
+            ];
+
+            // Products
+            state.products = [
+                { id: 1, name: 'Biology Textbook', price: 80, seller: 'Yaw Books', category: 'Textbooks', seed: 'biology' },
+                { id: 2, name: 'HP Laptop', price: 2500, seller: 'Tech Hub', category: 'Electronics', seed: 'laptop' },
+                { id: 3, name: 'Samsung Phone', price: 1200, seller: 'Mobile Store', category: 'Electronics', seed: 'phone' },
+                { id: 4, name: 'Kente Shirt', price: 45, seller: 'Ghana Fashion', category: 'Clothing', seed: 'kente' },
+            ];
+
+            // Vendors
+            state.vendors = [
+                {
+                    id: 1,
+                    name: 'Mama Akos Jollof',
+                    cuisine: 'Jollof Rice',
+                    rating: '★★★★☆',
+                    status: 'Open',
+                    seed: 'jollof',
+                    menu: [
+                        { name: 'Large Jollof', price: 15 },
+                        { name: 'Mixed Rice', price: 12 },
+                        { name: 'Fried Rice', price: 12 },
+                        { name: 'Chicken Jollof', price: 18 },
+                        { name: 'Salad', price: 5 },
+                    ],
+                },
+                {
+                    id: 2,
+                    name: 'Waakye Corner',
+                    cuisine: 'Waakye & Stew',
+                    rating: '★★★★★',
+                    status: 'Open',
+                    seed: 'waakye',
+                    menu: [
+                        { name: 'Waakye with Egg', price: 8 },
+                        { name: 'Waakye with Meat', price: 12 },
+                        { name: 'Gari & Soup', price: 10 },
+                        { name: 'Fufu', price: 9 },
+                        { name: 'Plantain Chips', price: 3 },
+                    ],
+                },
+                {
+                    id: 3,
+                    name: 'Kelewele Express',
+                    cuisine: 'Spicy Snacks',
+                    rating: '★★★☆☆',
+                    status: 'Open',
+                    seed: 'kelewele',
+                    menu: [
+                        { name: 'Kelewele Pack', price: 7 },
+                        { name: 'Boiled Corn', price: 4 },
+                        { name: 'Groundnuts', price: 3 },
+                        { name: 'Roasted Plantain', price: 5 },
+                        { name: 'Mixed Pack', price: 10 },
+                    ],
+                },
+                {
+                    id: 4,
+                    name: 'Banku & Tilapia Spot',
+                    cuisine: 'Local Seafood',
+                    rating: '★★★★☆',
+                    status: 'Closed',
+                    seed: 'banku',
+                    menu: [
+                        { name: 'Banku & Okro', price: 12 },
+                        { name: 'Banku & Groundnut', price: 11 },
+                        { name: 'Grilled Tilapia', price: 18 },
+                        { name: 'Fish Soup', price: 10 },
+                        { name: 'Cassava Bread', price: 4 },
+                    ],
+                },
+            ];
+
+            // Opportunities
+            state.opportunities = [
+                {
+                    id: 1,
+                    title: 'GETFund Scholarship',
+                    org: 'Government Education Trust Fund',
+                    category: 'Scholarships',
+                    deadline: 'Mar 30, 2026',
+                    description: 'Full tuition scholarship for deserving students. Application available on student portal.',
+                    requirements: 'Minimum 3.5 GPA, active campus involvement, financial need',
+                    link: 'https://getfund.gov.gh',
+                },
+                {
+                    id: 2,
+                    title: 'Mastercard Foundation Scholars',
+                    org: 'Mastercard Foundation',
+                    category: 'Scholarships',
+                    deadline: 'Apr 15, 2026',
+                    description: 'Transformational scholarship program for African students.',
+                    requirements: 'Strong academics, leadership potential, demonstrated financial need',
+                    link: 'https://mastercardfdn.org',
+                },
+                {
+                    id: 3,
+                    title: 'Ghana Health Service Internship',
+                    org: 'Ghana Health Service',
+                    category: 'Internships',
+                    deadline: 'Apr 5, 2026',
+                    description: 'Paid 6-month internship in various health facilities across Ghana.',
+                    requirements: '3rd or 4th year student, GPA 3.0+, health science student',
+                    link: 'https://ghs.gov.gh',
+                },
+                {
+                    id: 4,
+                    title: 'MTN Ghana Graduate Program',
+                    org: 'MTN Ghana',
+                    category: 'Jobs',
+                    deadline: 'Apr 20, 2026',
+                    description: 'Entry-level management trainee program for recent graduates.',
+                    requirements: 'Bachelor\'s degree, excellent communication skills',
+                    link: 'https://mtn.com.gh',
+                },
+                {
+                    id: 5,
+                    title: 'KNUST Tech Summit',
+                    org: 'KNUST Computer Science Dept',
+                    category: 'Events',
+                    deadline: 'Mar 28, 2026',
+                    description: 'Annual technology innovation showcase and networking event.',
+                    requirements: 'Open to all students, free registration',
+                    link: 'https://knust.edu.gh',
+                },
+            ];
+
+            // Notifications
+            state.notifications = [
+                { title: 'Kente Shirt Sold!', time: '2 min ago' },
+                { title: 'New comment on your post', time: '15 min ago' },
+                { title: 'GETFund deadline reminder', time: '1 hour ago' },
+                { title: 'Order #1234 arriving soon', time: '3 hours ago' },
+                { title: 'Welcome to Campus Hub!', time: '1 day ago' },
+            ];
+        }
+
+        function setupEventListeners() {
+            // Auth
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const mode = e.target.dataset.mode;
+                    toggleAuthMode(mode);
+                });
+            });
+            document.getElementById('authSubmit').addEventListener('click', handleAuth);
+
+            // Navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const tab = e.currentTarget.dataset.tab;
+                    switchTab(tab);
+                });
+            });
+
+            // Home Tab
+            document.getElementById('fab').addEventListener('click', () => openModal('createPostModal'));
+            document.getElementById('postSubmit').addEventListener('click', submitPost);
+            document.getElementById('searchBtn').addEventListener('click', () => {
+                const input = document.getElementById('searchInput');
+                input.classList.toggle('hidden');
+                if (!input.classList.contains('hidden')) input.focus();
+            });
+            document.getElementById('searchInput').addEventListener('input', filterFeed);
+            document.getElementById('notificationBtn').addEventListener('click', toggleNotifications);
+
+            // Market
+            document.getElementById('marketSearch').addEventListener('input', filterProducts);
+            document.querySelector('[data-modal="listItem"]').addEventListener('click', () => openModal('listItemModal'));
+            document.getElementById('itemSubmit').addEventListener('click', submitListItem);
+
+            // Food
+            document.getElementById('notificationBtn').addEventListener('click', () => openModal('cartModal'));
+
+            // Tribe AI
+            document.getElementById('tribeSend').addEventListener('click', sendTribeMessage);
+            document.getElementById('tribeInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendTribeMessage();
+            });
+
+            // Profile
+            document.getElementById('anonToggle').addEventListener('click', toggleAnonymous);
+            document.getElementById('editProfile').addEventListener('click', () => {
+                document.getElementById('editName').value = state.user.name;
+                document.getElementById('editSchool').value = state.user.school;
+                openModal('editProfileModal');
+            });
+            document.getElementById('saveProfileBtn').addEventListener('click', saveProfile);
+            document.getElementById('logout').addEventListener('click', handleLogout);
+
+            // Cart
+            document.getElementById('placeOrderBtn').addEventListener('click', placeOrder);
+        }
+
+        // ============ AUTH ============
+        function showAuth() {
+            const authScreen = document.getElementById('authScreen');
+            const appContainer = document.getElementById('appContainer');
+            authScreen.style.display = 'flex';
+            appContainer.style.display = 'none';
+        }
+
+        function showApp() {
+            const authScreen = document.getElementById('authScreen');
+            const appContainer = document.getElementById('appContainer');
+            authScreen.style.display = 'none';
+            appContainer.style.display = 'flex';
+            renderHome();
+            renderMarket();
+            renderFood();
+            renderTribe();
+            renderOpps();
+            renderProfile();
+        }
+
+        function toggleAuthMode(mode) {
+            const isSignup = mode === 'signup';
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+
+            const nameInput = document.getElementById('authName');
+            const schoolGroup = document.getElementById('schoolGroup');
+            const submitBtn = document.getElementById('authSubmit');
+
+            if (isSignup) {
+                nameInput.style.display = 'block';
+                schoolGroup.style.display = 'block';
+                submitBtn.textContent = 'Sign Up';
+            } else {
+                nameInput.style.display = 'none';
+                schoolGroup.style.display = 'none';
+                submitBtn.textContent = 'Login';
+            }
+        }
+
+        function handleAuth() {
+            const isSignup = document.querySelector('.toggle-btn.active').dataset.mode === 'signup';
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const errorDiv = document.getElementById('authError');
+
+            errorDiv.textContent = '';
+
+            if (!email || !password) {
+                errorDiv.textContent = 'Please fill in all fields';
+                return;
+            }
+
+            if (isSignup) {
+                const name = document.getElementById('authName').value;
+                const school = document.getElementById('authSchool').value;
+                if (!name || !school) {
+                    errorDiv.textContent = 'Please fill in all fields';
+                    return;
+                }
+                state.user = { name, email, school };
+            } else {
+                // Simple login - accept any creds
+                state.user = { name: 'User', email, school: 'KNUST' };
+            }
+
+            localStorage.setItem('campusHubUser', JSON.stringify(state.user));
+            showApp();
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('campusHubUser');
+            state.user = null;
+            state.cart = [];
+            state.posts = [];
+            initializeData();
+            showAuth();
+        }
+
+        // ============ TAB SWITCHING ============
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            const fab = document.getElementById('fab');
+            fab.classList[tabName === 'home' ? 'add' : 'remove']('show');
+
+            if (tabName === 'home') renderHome();
+        }
+
+        // ============ HOME TAB ============
+        function renderHome() {
+            const topBar = document.getElementById('topBarSchool');
+            topBar.textContent = state.user?.school || 'KNUST';
+
+            // Stories
+            const storyRow = document.getElementById('storyRow');
+            storyRow.innerHTML = state.posts.map(post => `
+                <div class="story-item">
+                    <div class="story-avatar">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${post.avatar}" 
+                             onerror="this.style.display='none'" alt="avatar">
+                    </div>
+                    <div class="story-label">${post.name.split(' ')[0]}</div>
+                </div>
+            `).join('');
+
+            // Feed
+            renderFeed();
+        }
+
+        function renderFeed(filtered = false) {
+            let posts = state.posts;
+            if (filtered) {
+                const query = document.getElementById('searchInput').value.toLowerCase();
+                posts = posts.filter(p => p.text.toLowerCase().includes(query));
+            }
+
+            const feed = document.getElementById('feedContainer');
+            feed.innerHTML = posts.map(post => {
+                const badge = post.type === 'official' ? '<span class="badge badge-official">Official</span>' :
+                    post.type === 'scholar' ? '<span class="badge badge-scholar">Scholar</span>' :
+                        '<span class="badge badge-peer">Peer</span>';
+
+                return `
+                    <div class="feed-card">
+                        <div class="card-header">
+                            <div class="card-avatar">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${post.avatar}" 
+                                     onerror="this.style.display='none'" alt="avatar">
+                            </div>
+                            <div class="card-meta">
+                                <div class="card-name">${post.name}${badge}</div>
+                                <div class="card-time">${post.time}</div>
+                            </div>
+                        </div>
+                        <div class="card-body">${post.text}</div>
+                        <div class="card-actions">
+                            <button class="action-btn ${post.liked ? 'liked' : ''}" 
+                                    onclick="toggleLike(${post.id})">❤️ ${post.likes}</button>
+                            <button class="action-btn">💬 ${post.comments}</button>
+                            <button class="action-btn">↗️ Share</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterFeed() {
+            renderFeed(true);
+        }
+
+        function toggleLike(postId) {
+            const post = state.posts.find(p => p.id === postId);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes += post.liked ? 1 : -1;
+                renderFeed();
+            }
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationPanel');
+            panel.classList.toggle('active');
+            if (panel.classList.contains('active')) {
+                panel.innerHTML = state.notifications.map(notif => `
+                    <div class="notification-item">
+                        <div class="notification-title">${notif.title}</div>
+                        <div class="notification-time">${notif.time}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function submitPost() {
+            const text = document.getElementById('postText').value;
+            const category = document.getElementById('postCategory').value;
+            if (!text) return;
+
+            const newPost = {
+                id: state.posts.length + 1,
+                name: state.isAnonymous ? 'Anonymous' : (state.user?.name || 'User'),
+                avatar: 'user',
+                type: category,
+                time: 'now',
+                text: text,
+                likes: 0,
+                liked: false,
+                comments: 0,
+            };
+
+            state.posts.unshift(newPost);
+            document.getElementById('postText').value = '';
+            closeModal('createPostModal');
+            renderFeed();
+        }
+
+        // ============ MARKET TAB ============
+        function renderMarket() {
+            renderCategories();
+            renderProducts();
+        }
+
+        function renderCategories() {
+            const categories = ['All', 'Textbooks', 'Electronics', 'Clothing', 'Services'];
+            const chips = document.getElementById('categoryChips');
+            chips.innerHTML = categories.map((cat, i) => `
+                <button class="chip ${i === 0 ? 'active' : ''}" onclick="filterByCategory('${cat}')">${cat}</button>
+            `).join('');
+        }
+
+        function renderProducts(category = 'All') {
+            let products = state.products;
+            if (category !== 'All') {
+                products = products.filter(p => p.category === category);
+            }
+
+            const query = document.getElementById('marketSearch')?.value.toLowerCase() || '';
+            if (query) {
+                products = products.filter(p => p.name.toLowerCase().includes(query));
+            }
+
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(prod => `
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="https://picsum.photos/seed/${prod.seed}/300/200" 
+                             onerror="this.style.display='none'; this.parentElement.textContent='📦'" 
+                             alt="${prod.name}">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${prod.name}</div>
+                        <div class="product-price">GHS ${prod.price}</div>
+                        <div class="product-seller">${prod.seller}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByCategory(cat) {
+            document.querySelectorAll('.category-chips .chip').forEach(chip => chip.classList.remove('active'));
+            event.target.classList.add('active');
+            renderProducts(cat);
+        }
+
+        function filterProducts() {
+            renderProducts('All');
+        }
+
+        function submitListItem() {
+            const name = document.getElementById('itemName').value;
+            const price = parseInt(document.getElementById('itemPrice').value);
+            const category = document.getElementById('itemCategory').value;
+            const seed = document.getElementById('itemSeed').value || name.toLowerCase();
+
+            if (!name || !price) return;
+
+            state.products.push({
+                id: state.products.length + 1,
+                name,
+                price,
+                seller: state.user?.name || 'User',
+                category,
+                seed,
+            });
+
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            document.getElementById('itemSeed').value = '';
+            closeModal('listItemModal');
+            renderProducts('All');
+        }
+
+        // ============ FOOD TAB ============
+        function renderFood() {
+            const vendors = document.getElementById('vendorsList');
+            vendors.innerHTML = state.vendors.map(vendor => `
+                <div class="vendor-card" onclick="openVendorMenu(${vendor.id})">
+                    <div class="vendor-img">
+                        <img src="https://picsum.photos/seed/${vendor.seed}/400/200" 
+                             onerror="this.style.display='none'; this.parentElement.textContent='🍽️'" 
+                             alt="${vendor.name}">
+                    </div>
+                    <div class="vendor-info">
+                        <div class="vendor-name">${vendor.name}</div>
+                        <div class="vendor-cuisine">${vendor.cuisine}</div>
+                        <div class="vendor-rating">${vendor.rating}</div>
+                        <div class="vendor-status ${vendor.status === 'Open' ? 'status-open' : 'status-closed'}">
+                            ${vendor.status}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openVendorMenu(vendorId) {
+            const vendor = state.vendors.find(v => v.id === vendorId);
+            document.getElementById('vendorMenuTitle').textContent = vendor.name;
+
+            const container = document.getElementById('menuItemsContainer');
+            container.innerHTML = vendor.menu.map(item => `
+                <div class="menu-item">
+                    <div class="menu-item-info">
+                        <div class="menu-item-name">${item.name}</div>
+                        <div class="menu-item-price">GHS ${item.price}</div>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addToCart('${item.name}', ${item.price})">Add</button>
+                </div>
+            `).join('');
+
+            openModal('vendorMenuModal');
+        }
+
+        function addToCart(name, price) {
+            const existing = state.cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                state.cart.push({ name, price, qty: 1 });
+            }
+            updateCartBadge();
+            closeModal('vendorMenuModal');
+        }
+
+        function updateCartBadge() {
+            const badge = document.querySelector('.cart-badge');
+            const count = state.cart.reduce((sum, item) => sum + item.qty, 0);
+            if (badge) badge.textContent = count;
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cartItemsList');
+            list.innerHTML = state.cart.map((item, idx) => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">GHS ${item.price}</div>
+                    </div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="updateQty(${idx}, -1)">−</button>
+                        <span style="width: 16px; text-align: center;">${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = state.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('cartTotal').textContent = `GHS ${total}`;
+        }
+
+        function updateQty(idx, delta) {
+            state.cart[idx].qty += delta;
+            if (state.cart[idx].qty <= 0) {
+                state.cart.splice(idx, 1);
+            }
+            updateCartBadge();
+            renderCart();
+        }
+
+        function placeOrder() {
+            const orderNum = Math.floor(Math.random() * 10000);
+            document.getElementById('orderNumber').textContent = orderNum;
+            closeModal('cartModal');
+            openModal('orderSuccessModal');
+            state.cart = [];
+            updateCartBadge();
+        }
+
+        // ============ TRIBE AI TAB ============
+        function renderTribe() {
+            const modes = ['Study Help', 'Drug Info', 'Summarize', 'Biochem', 'Dosage Calc'];
+            const modeChips = document.getElementById('modeChips');
+            modeChips.innerHTML = modes.map(mode => `
+                <button class="chip ${mode === 'Study Help' ? 'active' : ''}" 
+                        onclick="switchMode('${mode}')">${mode}</button>
+            `).join('');
+
+            const prompts = ['Explain enzyme kinetics', 'Beta-lactam mechanism', 'Give me MCQs', 'Drug interactions'];
+            const promptChips = document.getElementById('promptChips');
+            promptChips.innerHTML = prompts.map(prompt => `
+                <button class="prompt-chip" onclick="fillInput('${prompt}')">${prompt}</button>
+            `).join('');
+        }
+
+        function switchMode(mode) {
+            state.currentMode = mode;
+            document.querySelectorAll('.mode-chips .chip').forEach(chip => chip.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function fillInput(prompt) {
+            document.getElementById('tribeInput').value = prompt;
+        }
+
+        function sendTribeMessage() {
+            const input = document.getElementById('tribeInput');
+            const msg = input.value;
+            if (!msg) return;
+
+            state.chatHistory.push({ user: msg, ai: null });
+            renderChat();
+            input.value = '';
+
+            // Show typing
+            showTyping();
+
+            // Simulate AI response
+            setTimeout(() => {
+                const response = generateAIResponse(msg);
+                state.chatHistory[state.chatHistory.length - 1].ai = response;
+                renderChat();
+            }, 1500);
+        }
+
+        function generateAIResponse(input) {
+            const lower = input.toLowerCase();
+
+            if (lower.includes('enzyme') || lower.includes('kinetics')) {
+                return 'Enzyme kinetics studies the rate of enzymatic reactions. Key concepts: Michaelis-Menten equation, Vmax, Km, and substrate concentration effects. Enzymes lower activation energy by stabilizing transition states.';
+            } else if (lower.includes('beta') || lower.includes('lactam')) {
+                return 'Beta-lactam antibiotics inhibit bacterial cell wall synthesis by binding penicillin-binding proteins (PBPs). They prevent peptidoglycan cross-linking, causing cell wall weakening. Resistance develops through beta-lactamase production.';
+            } else if (lower.includes('mcq') || lower.includes('question')) {
+                return 'Q1: A 65-year-old with CAP, penicillin allergy\nA) Fluoroquinolone\nB) Aminoglycoside\nC) Both\nAnswer: A - Fluoroquinolones are ideal for respiratory infections.';
+            } else if (lower.includes('interaction') || lower.includes('drug')) {
+                return 'Common drug interactions: ACE-I + Potassium-sparing diuretics → hyperkalemia risk. Warfarin + NSAIDs → increased bleeding. Grapefruit juice inhibits CYP3A4. Always check interactions before prescribing.';
+            } else {
+                return 'That\'s an interesting question about ' + (state.currentMode || 'pharmacy') + '. In health sciences, we must consider pharmacokinetics, mechanisms of action, and patient-specific factors. Can you elaborate on what aspect you\'d like to explore?';
+            }
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML += `
+                <div class="chat-bubble ai">
+                    <div class="bubble-content">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function renderChat() {
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = state.chatHistory.map(exchange => `
+                <div class="chat-bubble user">
+                    <div class="bubble-content">${exchange.user}</div>
+                </div>
+                ${exchange.ai ? `
+                    <div class="chat-bubble ai">
+                        <div class="bubble-content">${exchange.ai}</div>
+                    </div>
+                ` : ''}
+            `).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ============ OPPS TAB ============
+        function renderOpps() {
+            const categories = ['Scholarships', 'Internships', 'Jobs', 'Events'];
+            const subTabs = document.getElementById('oppSubTabs');
+            subTabs.innerHTML = categories.map((cat, i) => `
+                <button class="sub-tab ${i === 0 ? 'active' : ''}" 
+                        onclick="filterOpps('${cat}')">${cat}</button>
+            `).join('');
+
+            filterOpps('Scholarships');
+        }
+
+        function filterOpps(category) {
+            document.querySelectorAll('.sub-tabs .sub-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const filtered = state.opportunities.filter(opp => opp.category === category);
+            const container = document.getElementById('oppCardsContainer');
+            container.innerHTML = filtered.map(opp => {
+                const firstLetter = opp.org[0].toUpperCase();
+                let colorClass = 'color-a';
+                if (firstLetter >= 'G' && firstLetter <= 'L') colorClass = 'color-g';
+                else if (firstLetter >= 'M' && firstLetter <= 'R') colorClass = 'color-m';
+                else if (firstLetter >= 'S') colorClass = 'color-s';
+
+                return `
+                    <div class="opp-card" onclick="openOppDetail(${opp.id})">
+                        <div class="opp-logo ${colorClass}">${firstLetter}</div>
+                        <div class="opp-details">
+                            <div class="opp-title">${opp.title}</div>
+                            <div class="opp-org">${opp.org}</div>
+                            <div class="opp-deadline">Deadline: ${opp.deadline}</div>
+                        </div>
+                        <button class="bookmark-btn ${state.savedOpps.includes(opp.id) ? 'saved' : ''}" 
+                                onclick="toggleBookmark(event, ${opp.id})">🔖</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openOppDetail(oppId) {
+            const opp = state.opportunities.find(o => o.id === oppId);
+            document.getElementById('oppDetailTitle').textContent = opp.title;
+            document.getElementById('oppDetailBody').innerHTML = `
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; margin-bottom: 4px;">Organization</div>
+                    <div style="color: var(--text-dim); font-size: 12px;">${opp.org}</div>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; margin-bottom: 4px;">Deadline</div>
+                    <div style="color: #FF4757; font-size: 12px; font-weight: 600;">${opp.deadline}</div>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; margin-bottom: 4px;">Description</div>
+                    <div style="font-size: 12px; line-height: 1.5;">${opp.description}</div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="font-weight: 600; margin-bottom: 4px;">Requirements</div>
+                    <div style="font-size: 12px; line-height: 1.5;">${opp.requirements}</div>
+                </div>
+                <a href="${opp.link}" target="_blank" class="primary-btn" style="display: block; text-align: center; text-decoration: none;">Apply Now</a>
+            `;
+            openModal('oppDetailModal');
+        }
+
+        function toggleBookmark(e, oppId) {
+            e.stopPropagation();
+            if (state.savedOpps.includes(oppId)) {
+                state.savedOpps = state.savedOpps.filter(id => id !== oppId);
+            } else {
+                state.savedOpps.push(oppId);
+            }
+            filterOpps(document.querySelector('.sub-tab.active').textContent);
+        }
+
+        // ============ PROFILE TAB ============
+        function renderProfile() {
+            document.getElementById('profileName').textContent = state.user?.name || 'User';
+            document.getElementById('profileSchool').textContent = state.user?.school || 'KNUST';
+            document.getElementById('profileAvatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${state.user?.name || 'user'}`;
+
+            document.getElementById('statListings').textContent = state.products.length;
+            document.getElementById('statSaved').textContent = state.savedOpps.length;
+            document.getElementById('statPosts').textContent = state.posts.length;
+
+            document.getElementById('anonToggle').textContent = `👤 Anonymous Mode: ${state.isAnonymous ? 'ON' : 'OFF'}`;
+        }
+
+        function toggleAnonymous() {
+            state.isAnonymous = !state.isAnonymous;
+            renderProfile();
+        }
+
+        function saveProfile() {
+            state.user.name = document.getElementById('editName').value;
+            state.user.school = document.getElementById('editSchool').value;
+            localStorage.setItem('campusHubUser', JSON.stringify(state.user));
+            closeModal('editProfileModal');
+            renderProfile();
+            renderHome();
+        }
+
+        // ============ MODALS ============
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add('active');
+            if (id === 'cartModal') renderCart();
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal(modal.id);
+            });
+        });
+
+        // Initialize app
+        init();
+    </script>
+</body>
+
+</html>
